@@ -1,0 +1,66 @@
+
+
+body{
+    background: rgb(205, 191, 244);
+}
+.formbox h3{
+    text-align: center;
+}
+.formbox{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.tablediv{
+    
+    width: 60%;
+    margin-top: 20px;
+    margin-left: 250px;
+    height: 150px;
+   
+   
+}
+.header-data
+{
+    background: rgb(8, 116, 145);
+   
+}
+.user-data
+{
+    background: rgb(45, 201, 236);
+    
+}
+ table thead tr .tableheading{
+    
+    padding: 8px 30px ;
+    color: black;
+    margin-top: 5px;
+    
+    font-size: 17px;
+}
+table tbody tr td{
+    text-align: center;
+    color: rgb(14, 19, 14);
+    font-weight: bold;
+}
+.editbtn{
+    color: rgb(14, 8, 8);   
+    background-color: rgb(11, 229, 58);
+    padding: 10px 10px;
+}
+.addbtn{
+    color: rgb(4, 12, 4);
+    background-color: rgb(232, 165, 158);
+    padding: 10px 10px;
+}
+#tablebody{
+    background-color: rgb(249, 130, 83);
+}
+
+#tablebody tr td {
+     padding: 4px 5px;
+     font-size: 17px;
+   
+}

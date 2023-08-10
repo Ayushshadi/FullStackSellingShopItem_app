@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Shop seller</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+        
+    <div class="formbox">
+        <h3>Add Item</h3>
+    <form action="">
+        <label for="candyname">Item Name</label>
+        <input type="text" name="itemname"  id="itemname"  required>
+
+        <label for="description">Description</label>
+        <input type="text" name="description" id="description" required>
+
+        <label for="price">Price</label>
+        <input type="text" name="price" id="price" required>
+
+        <label for="quantity">Quantity</label>
+        <input type="text" name="quantity" id="quantity" required>
+
+        <button type="submit" class="addbtn" id="adddata"> Add Item</button>
+    </form>
+</div>
+    <div  class="tablediv">
+        <table class="header-data" >
+            <thead>
+                <tr class="user-data" >
+                    
+                    <th class="tableheading" >Item Name</th>
+                    <th class="tableheading">Description</th>
+                    <th class="tableheading">Price</th>
+                    <th class="tableheading">Quantity</th>
+                    <th class="tableheading">Sell</th>
+                </tr>
+            </thead>
+             <tbody id="tablebody" >
+    
+                
+             </tbody>
+            
+        </table>
+    </div>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.5/axios.min.js" integrity="sha512-nnNHpffPSgINrsR8ZAIgFUIMexORL5tPwsfktOTxVYSv+AUAILuFYWES8IHl+hhIhpFGlKvWFiz9ZEusrPcSBQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+let itemname=document.getElementById('itemname');
+let descriptionInput=document.getElementById('description');
+let priceInput=document.getElementById('price');
+let quantityInput=document.getElementById('quantity');
+let adddata=document.getElementById('adddata');
+
+const saveitem= async(e)=>{
+    e.preventDefault();
+    
+    if( itemname.value=="" || descriptionInput.value ==""  || priceInput.value == "Choose Category" || quantityInput.value ==""   )
+    {
+        
+        window.alert('Please Enter All fields');
+    }
+
+    else{
+
+        let obj={
+            itemname:itemname.value,
+            description:descriptionInput.value,
+            price:priceInput.value,
+            quantity: quantityInput.value
+    
+        }
+        try{
+
+            let response= await axios.post('http://localhost:3000/add',obj)
+             
+                 console.log(response);
+               showDataOnScreen(response.data.newitem);  
+        }
+        catch(err){
+            console.log(err);
+        }
+        
+    }
+}
+
+adddata.addEventListener('click',saveitem);
+
+window.addEventListener('DOMContentLoaded',async ()=>{
+
+    try{
+
+       let response= await axios.get('http://localhost:3000/load-data')
+       
+            // console.log(response);
+            for(let i=0;i<response.data.allData.length;i++){
+                showDataOnScreen(response.data.allData[i]);
+            }
+    }
+    catch(err){
+        console.log(err);
+    }
+    
+})
+
+
+function showDataOnScreen(obj){
+    // console.log(obj);
+    let parent=document.getElementById('tablebody');
+    let childHTML=` <tr  id=${obj.id}>
+                 
+    <td>${obj.name}</td>
+    <td>${obj.description}</td>
+    <td>${obj.price}</td>
+    <td>${obj.quantity}</td>
+    <td><button id='${obj.id}-buy1' class="editbtn" onClick= buyOne(${obj.id})>Buy1</button><button id='${obj.id}-buy2' class="editbtn"  onClick= buyTwo(${obj.id})>Buy2</button><button id='${obj.id}-buy3' class="editbtn"  onClick= buyThree(${obj.id})>Buy3</button></td>
+    
+    </tr>`;
+    parent.innerHTML+=childHTML;
+    itemname.value="",
+    descriptionInput.value="",
+    priceInput.value="",
+    quantityInput.value="";
+    
+   
+  }
+
+
+async function buyOne(id) {
+  console.log(id);
+    const Row = document.getElementById(id);
+    const quantityCell = Row.children[3];
+    const nameCell=Row.children[0];
+    const descriptionCell=Row.children[1];
+    const priceCell=Row.children[2];
+    let quantity = Number(quantityCell.textContent);
+    if (quantity > 0) {
+      quantity -= 1;
+      quantityCell.textContent = quantity;
+
+      let obj={
+        itemname:nameCell.textContent,
+        description:descriptionCell.textContent,
+        price:priceCell.textContent,
+        quantity: quantityCell.textContent
+
+    }
+      try {
+        const response = await axios.put(`http://localhost:3000/edit/${id}`,obj );
+        console.log(response);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      window.alert('This Item is out of stock.');
+    }
+  }
+  
+  async function buyTwo(id) {
+    const Row = document.getElementById(id);
+    const quantityCell = Row.children[3];
+    const nameCell=Row.children[0];
+    const descriptionCell=Row.children[1];
+    const priceCell=Row.children[2];
+    let quantity = Number(quantityCell.textContent);
+    if (quantity > 1) {
+      quantity -= 2;
+      quantityCell.textContent = quantity;
+
+      let obj={
+        itemname:nameCell.textContent,
+        description:descriptionCell.textContent,
+        price:priceCell.textContent,
+        quantity: quantityCell.textContent
+
+    }
+      try {
+        const response = await axios.put(`http://localhost:3000/edit/${id}`, obj);
+        console.log(response);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      window.alert('This candy is out of stock.');
+    }
+  }
+
+  async function buyThree(id) {
+    const Row = document.getElementById(id);
+    const quantityCell = Row.children[3];
+    const nameCell=Row.children[0];
+    const descriptionCell=Row.children[1];
+    const priceCell=Row.children[2];
+    let quantity = Number(quantityCell.textContent);
+    if (quantity > 2) {
+      quantity -= 3;
+      quantityCell.textContent = quantity;
+
+      let obj={
+        itemname:nameCell.textContent,
+        description:descriptionCell.textContent,
+        price:priceCell.textContent,
+        quantity: quantityCell.textContent
+
+    }
+      try {
+        const response = await axios.put(`http://localhost:3000/edit/${id}`, obj);
+        console.log(response);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      window.alert('This candy is out of stock.');
+    }
+  }
+    </script>
+</body>
+</html>
